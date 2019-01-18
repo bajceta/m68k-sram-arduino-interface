@@ -44,8 +44,8 @@ void write(unsigned int address, byte value) {
   PORTB &= ~W;
   PORTB &= ~W;
   /* delay(1); */
-  status();
-  PORTB |= W;
+  /* status(); */
+  /* PORTB |= W; */
   PORTB |= W;
   DDRA = 0;
 }
@@ -55,11 +55,11 @@ byte read(unsigned int address) {
   PORTC = lowByte(address);
   PORTL = highByte(address); 
   PORTB &= ~OE;
-  PORTB &= ~OE;
+  /* PORTB &= ~OE; */
   PORTB &= ~OE;
   /* delay(1); */
   byte val = PINA;
-  status();
+  /* status(); */
   PORTB |= OE;
   return val;
 }
