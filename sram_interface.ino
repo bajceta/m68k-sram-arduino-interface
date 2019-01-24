@@ -14,9 +14,6 @@ byte S1 = 1<<1;
 byte W  = 1<<2;
 byte S2 = 1<<3;
 
-
-
-
 void setup() {
   // put your setup code here, to run once:
   DDRA=B11111111;
@@ -35,12 +32,14 @@ void setup() {
   status();
 }
 
-void write(unsigned int address, byte value) {
+void write(unsigned int address, unsigned int value) {
   DDRA=0xFF;
+  DDRK=0xFF;
   PORTG &= ~1;
   PORTC = lowByte(address);
   PORTL = highByte(address); 
-  PORTA = value;
+  PORTA = lowByte(value);
+  PORTK = highByte(value);
   PORTB &= ~W;
   PORTB &= ~W;
   /* delay(1); */
@@ -48,17 +47,20 @@ void write(unsigned int address, byte value) {
   /* PORTB |= W; */
   PORTB |= W;
   DDRA = 0;
+  DDRK = 0;
 }
-byte read(unsigned int address) {
+int read(unsigned int address) {
   DDRA = 0x00;
+  DDRK = 0x00;
   PORTA = 0xFF;
+  PORTK = 0xFF;
   PORTC = lowByte(address);
   PORTL = highByte(address); 
   PORTB &= ~OE;
   /* PORTB &= ~OE; */
   PORTB &= ~OE;
   /* delay(1); */
-  byte val = PINA;
+  int val = PINA | PINK<<8;
   /* status(); */
   PORTB |= OE;
   return val;
@@ -78,12 +80,12 @@ void status() {
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.println("");
-  Serial.println("gonna write");
-  write(10, 0xAD);
-  write(15, 0x9D);
-  write(20, 0x8D);
-  write(12331, 0x77);
-  byte ret = read(10);
+  Serial.println("gonna 22");
+  write(10, 0x1FAD);
+  write(15, 0x239D);
+  write(20, 0x888D);
+  write(12331, 0x9076);
+  unsigned int ret = read(10);
   Serial.println(ret, HEX);
   ret = read(15);
   Serial.println(ret, HEX);
