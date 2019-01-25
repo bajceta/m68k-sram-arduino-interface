@@ -8,11 +8,19 @@
  /* - PB1 - 52 - !S1  */
  /* - PB0 - 53 - !OE  */
 
+#define INPUT_SIZE 30
+char input[INPUT_SIZE + 1];
+byte input_index=0;
+bool stringComplete = false;  // whether the string is complete
+
 
 byte OE = 1<<0;
 byte S1 = 1<<1;
 byte W  = 1<<2;
 byte S2 = 1<<3;
+
+
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -77,7 +85,8 @@ void status() {
   Serial.print(" PORTL: ");Serial.println(PORTL,BIN);
 }
 
-void loop() {
+
+void simple_test() {
   // put your main code here, to run repeatedly:
   Serial.println("");
   Serial.println("gonna 22");
@@ -97,3 +106,45 @@ void loop() {
   status();
   delay(2000);
 }
+
+
+void loop() {
+if (stringComplete) {
+    Serial.println(input);
+    handleCommand();
+    stringComplete = false;
+  }
+}
+
+void handleCommand(){
+    // Split the command in two values
+    char* separator = strchr(input, ' ');
+    if (separator != 0)
+    {
+        // Actually split the string in 2: replace ' ' with 0
+        *separator = 0;
+        ++separator;
+        Serial.println(input);
+        Serial.println(separator);
+        // Do something with servoId and position
+    }
+}
+
+
+void serialEvent() {
+  while (Serial.available()) {
+    // get the new byte:
+    char inChar = (char)Serial.read();
+    // add it to the inputString:
+    input[input_index]=inChar;
+    input_index++;
+    // if the incoming character is a newline, set a flag so the main loop can
+    // do something about it:
+    if (inChar == '\n') {
+      input[input_index]=0;
+      stringComplete = true;
+      input_index = 0;
+    }
+  }
+}
+
