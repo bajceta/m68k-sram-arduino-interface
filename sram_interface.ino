@@ -342,6 +342,9 @@ void simple_test()
     write(15, 0x239D);
     write(20, 0x888D);
     write(12331, 0x9076);
+    write(22, 0xFFFF);
+    write(24, 0x0000);
+
     uint16_t ret = read(10);
     Serial.println(ret, HEX);
     ret = read(15);
@@ -350,6 +353,22 @@ void simple_test()
     Serial.println(ret, HEX);
     ret = read(12331);
     Serial.println(ret, HEX);
+
+    ret = read(22);
+    Serial.println(ret, HEX);
+    ret = read(24);
+    Serial.println(ret, HEX);
+    write(0,0x0000);
+    write(1,0xFFFF);
+    write(2,0x0000);
+    write(3,0xFFFF);
+ 
+    write(4,0x0000);
+    write(5,0xFFFF);
+    write(6,0x0000);
+    write(7,0xFFFF);
+    write(8,0x0000);
+    write(9,0xFFFF);
 
     status();
     delay(2000);
